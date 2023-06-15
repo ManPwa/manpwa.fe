@@ -1,7 +1,7 @@
 import React from 'react'
 import { List, Datagrid, TextField, DataField, EditButton, DeleteButton } from 'react-admin'
 
-const PostList = (props) => {
+const mangaList = (props) => {
     return <List {...props}>
         <Datagrid>
             <TextField source='_id'></TextField>
@@ -13,4 +13,4 @@ const PostList = (props) => {
     </List>
 }
 
-export default PostList
+export default mangaList

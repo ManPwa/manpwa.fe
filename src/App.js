@@ -1,10 +1,13 @@
 import { Admin, Resource } from 'react-admin'
 import restProvider from 'ra-data-simple-rest'
-import PostList from './components/PostList'
+import mangaList from './components/mangaList'
+import userList from './components/userList'
+import { authProvider }  from './components/authProvider';
 
 function App() {
-  return <Admin dataProvider={restProvider('http://127.0.0.1:5001/api')}>
-    <Resource name='manga' list={PostList}/>
+  return <Admin dataProvider={restProvider(`${process.env.REACT_APP_API_BASE_URL}/api`)} authProvider={authProvider} requireAuth>
+    <Resource name='manga' list={mangaList}/>
+    <Resource name='user' list={userList}/>
   </Admin>
 }
 

@@ -2,6 +2,7 @@ import * as React from 'react';
 import { useTheme, useMediaQuery } from '@mui/material';
 import { Box, ImageList, ImageListItem, ImageListItemBar } from '@mui/material';
 import { useCreatePath, NumberField, useListContext } from 'react-admin';
+import { Link } from 'react-router-dom';
 
 const GridList = () => {
     const { isLoading } = useListContext();
@@ -47,7 +48,15 @@ const LoadedGridList = () => {
     return (
         <ImageList rowHeight={300} cols={cols} sx={{ m: 0 }}>
             {data.map(record => (
-                <ImageListItem>
+                <ImageListItem
+                    component={Link}
+                    key={record.id}
+                    to={createPath({
+                        resource: 'manga',
+                        id: record._id,
+                        type: 'edit',
+                    })}
+                >
                     <img src={record.cover_art_url} alt="" />
                     <ImageListItemBar
                         title={record.title}

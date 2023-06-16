@@ -1,6 +1,5 @@
 import { fetchUtils } from 'ra-core';
 import { stringify } from 'query-string';
-
 const dataProvider = {
     getList: (resource, params) => {
         const { page, perPage } = params.pagination;
@@ -8,8 +7,8 @@ const dataProvider = {
         const query = {
             sort: JSON.stringify([field, order]),
             range: JSON.stringify([(page - 1) * perPage, page * perPage - 1]),
-            filter: JSON.stringify(params.filter),
-        }; 
+            title: JSON.stringify(params.filter["q"]),
+        };
         const url = `${process.env.REACT_APP_API_BASE_URL}/api/${resource}?${stringify(query)}`;
 
         return fetchUtils.fetchJson(url).then(({ headers, json }) => ({
@@ -17,11 +16,11 @@ const dataProvider = {
             total: parseInt(headers.get('content-range').split('/').pop(), 10),
         }));
     },
-    getOne: (resource, params) =>
-        fetchUtils.fetchJson(`${process.env.REACT_APP_API_BASE_URL}/api/${resource}/${params.id}`).then(({ json }) => (
-            { ...json, id: json._id }
-        )),
-
+    getOne: (resource, params) => {
+        return fetchUtils.fetchJson(`${process.env.REACT_APP_API_BASE_URL}/api/${resource}/${params.id}`).then(({ json }) => (
+            { data: { ...json, id: json._id } }
+        ));
+    },
     getMany: (resource, params) => {
         const query = {
             filter: JSON.stringify({ id: params.ids }),
@@ -43,7 +42,7 @@ const dataProvider = {
                 [params.target]: params.id,
             }),
         };
-        const url = `${process.env.REACT_APP_API_BASE_URL}/api/${resource}?${stringify(query)}`;
+        const url = `${process.env.REACT_APP_API_BASE_URL}/api/${resource}/${params.id}/${params.target}?${stringify(query)}`;
 
         return fetchUtils.fetchJson(url).then(({ headers, json }) => ({
             data: json.map(resource => ({ ...resource, id: resource._id })),
@@ -51,14 +50,18 @@ const dataProvider = {
         }));
     },
 
-    update: (resource, params) =>
-        fetchUtils.fetchJson(`${process.env.REACT_APP_API_BASE_URL}/api/${resource}/${params.id}`, {
+    update: (resource, params) => {
+        return fetchUtils.fetchJson(`${process.env.REACT_APP_API_BASE_URL}/api/${resource}/${params.id}`, {
             method: 'PUT',
             body: JSON.stringify(params.data),
+            headers: new Headers({ 
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('token')}` 
+            }),
         }).then(({ json }) => (
-            { ...json, id: json._id }
-        )),
-
+            { data: { ...json, id: json._id } }
+        ));
+    },
     updateMany: (resource, params) => {
         const query = {
             filter: JSON.stringify({ id: params.ids }),
@@ -80,6 +83,10 @@ const dataProvider = {
     delete: (resource, params) =>
         fetchUtils.fetchJson(`${process.env.REACT_APP_API_BASE_URL}/api/${resource}/${params.id}`, {
             method: 'DELETE',
+            headers: new Headers({
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }),
         }).then(({ json }) => (
             { ...json, id: json._id }
         )),

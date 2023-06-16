@@ -3,16 +3,18 @@ import React from 'react'
 import {
     ListBase,
     Pagination,
-    Title 
+    Title,
+    FilterLiveSearch 
 } from 'react-admin'
 import ImageList from './GridList';
 const mangaList = (props) => {
-    return <ListBase perPage={24}>
+    return <ListBase perPage={48}>
         <Title defaultTitle="Mangas" />
         <Box display="flex">
             <Box width={'auto' ? 'auto' : 'calc(100% - 16em)'}>
+                <FilterLiveSearch />
                 <ImageList />
-                <Pagination rowsPerPageOptions={[24, 48, 72]} />
+                <Pagination rowsPerPageOptions={[48, 72]} />
             </Box>
         </Box>
     </ListBase>

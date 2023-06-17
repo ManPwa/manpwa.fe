@@ -9,15 +9,16 @@ import {
     EditButton,
     DeleteButton,
     TextField,
-    NumberField,
-    SimpleForm,
     TextInput,
     ImageInput,
     ImageField,
     ArrayInput,
     SimpleFormIterator,
-    Pagination
+    Pagination,
+    CreateButton
 } from 'react-admin';
+import { Link } from 'react-router-dom';
+import { Stack } from '@mui/material';
 import Cover from './cover';
 
 const MangaTitle = () => {
@@ -30,35 +31,41 @@ const mangaEdit = () => (
         <TabbedForm>
             <TabbedForm.Tab
                 label="Manga"
-                sx={{ maxWidth: '40em' }}
+                sx={{ maxWidth: '100%' }}
             >
-                <Cover />
-                <ImageInput sx={{ maxWidth: '16em' }} source="file" multiple={false}>
-                    <ImageField source="src" title="title" />
-                </ImageInput>
-                <TextInput multiline fullWidth source="title" />
-                <TextInput multiline fullWidth source="year" />
-                <TextInput multiline fullWidth source="status" />
-                <TextInput multiline fullWidth source="demographic" />
-                <TextInput multiline fullWidth source="author" />
-                <ArrayInput multiline fullWidth source="tags">
-                    <SimpleFormIterator inline>
-                        <TextInput helperText={false} />
-                    </SimpleFormIterator>
-                </ArrayInput>
-                <TextInput multiline fullWidth source="original_language" />
-                <TextInput multiline fullWidth source="description" />
+                <Stack direction="row" justifyContent="space-between">
+                    <div>
+                        <Cover />
+                        <ImageInput sx={{ maxWidth: '16em' }} source="file" multiple={false}>
+                            <ImageField source="src" title="title" />
+                        </ImageInput>
+                    </div>
+                    <div style={{paddingLeft: 20}}>
+                        <TextInput multiline fullWidth source="title" />
+                        <TextInput multiline fullWidth source="year" />
+                        <TextInput multiline fullWidth source="status" />
+                        <TextInput multiline fullWidth source="demographic" />
+                        <TextInput multiline fullWidth source="author" />
+                        <ArrayInput multiline fullWidth source="tags">
+                            <SimpleFormIterator inline>
+                                <TextInput helperText={false} />
+                            </SimpleFormIterator>
+                        </ArrayInput>
+                        <TextInput multiline fullWidth source="original_language" />
+                        <TextInput multiline fullWidth source="description" />
+                    </div>
+                </Stack>
             </TabbedForm.Tab>
             <TabbedForm.Tab
                 label="Chapter"
                 sx={{ maxWidth: '100%' }}
             >
+                <CreateButton/>
                 <ReferenceManyField
                     reference="manga"
                     target="chapter"
                     pagination={<Pagination />}
                 >
-
                     <Datagrid
                         sx={{
                             width: '100%',
@@ -74,8 +81,10 @@ const mangaEdit = () => (
                         <TextField source="title" />
                         <TextField source="volumn" />
                         <TextField source="page" />
-                        <EditButton resource='chapter' />
-                        <DeleteButton resource='chapter' redirect={false}/>
+                        <EditButton
+                            resource='chapter'
+                        />
+                        <DeleteButton resource='chapter' redirect={false} />
                     </Datagrid>
                 </ReferenceManyField>
             </TabbedForm.Tab>

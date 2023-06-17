@@ -4,15 +4,20 @@ import {
     ListBase,
     Pagination,
     Title,
-    FilterLiveSearch 
+    FilterLiveSearch,
+    CreateButton
 } from 'react-admin'
+import { Stack } from '@mui/material';
 import ImageList from './GridList';
 const mangaList = (props) => {
     return <ListBase perPage={48}>
         <Title defaultTitle="Mangas" />
         <Box display="flex">
             <Box width={'auto' ? 'auto' : 'calc(100% - 16em)'}>
-                <FilterLiveSearch />
+                <Stack direction="row" justifyContent="space-between">
+                    <FilterLiveSearch />
+                    <CreateButton />
+                </Stack>
                 <ImageList />
                 <Pagination rowsPerPageOptions={[48, 72]} />
             </Box>

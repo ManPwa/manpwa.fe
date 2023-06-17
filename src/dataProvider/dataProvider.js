@@ -1,5 +1,15 @@
 import { fetchUtils } from 'ra-core';
 import { stringify } from 'query-string';
+
+const convertFileToBase64 = file =>
+    new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = reject;
+
+        reader.readAsDataURL(file.rawFile);
+    });
+    
 const dataProvider = {
     getList: (resource, params) => {
         const { page, perPage } = params.pagination;

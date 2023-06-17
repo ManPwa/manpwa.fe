@@ -13,7 +13,10 @@ import {
     SimpleForm,
     TextInput,
     ImageInput,
-    ImageField
+    ImageField,
+    ArrayInput,
+    SimpleFormIterator,
+    Pagination
 } from 'react-admin';
 import Cover from './cover';
 
@@ -30,7 +33,7 @@ const mangaEdit = () => (
                 sx={{ maxWidth: '40em' }}
             >
                 <Cover />
-                <ImageInput source="file">
+                <ImageInput sx={{ maxWidth: '16em' }} source="file" multiple={false}>
                     <ImageField source="src" title="title" />
                 </ImageInput>
                 <TextInput multiline fullWidth source="title" />
@@ -38,18 +41,24 @@ const mangaEdit = () => (
                 <TextInput multiline fullWidth source="status" />
                 <TextInput multiline fullWidth source="demographic" />
                 <TextInput multiline fullWidth source="author" />
-                <TextInput multiline fullWidth source="tags" />
+                <ArrayInput multiline fullWidth source="tags">
+                    <SimpleFormIterator inline>
+                        <TextInput helperText={false} />
+                    </SimpleFormIterator>
+                </ArrayInput>
                 <TextInput multiline fullWidth source="original_language" />
                 <TextInput multiline fullWidth source="description" />
             </TabbedForm.Tab>
             <TabbedForm.Tab
                 label="Chapter"
-                sx={{ maxWidth: '40em' }}
+                sx={{ maxWidth: '100%' }}
             >
                 <ReferenceManyField
                     reference="manga"
                     target="chapter"
+                    pagination={<Pagination />}
                 >
+
                     <Datagrid
                         sx={{
                             width: '100%',
@@ -66,7 +75,34 @@ const mangaEdit = () => (
                         <TextField source="volumn" />
                         <TextField source="page" />
                         <EditButton resource='chapter' />
-                        <DeleteButton resource='chapter' />
+                        <DeleteButton resource='chapter' redirect={false}/>
+                    </Datagrid>
+                </ReferenceManyField>
+            </TabbedForm.Tab>
+            <TabbedForm.Tab
+                label="Comment"
+                sx={{ maxWidth: '100%' }}
+            >
+                <ReferenceManyField
+                    reference="manga"
+                    target="comment"
+                    pagination={<Pagination />}
+                >
+                    <Datagrid
+                        sx={{
+                            width: '100%',
+                            '& .column-comment': {
+                                maxWidth: '20em',
+                                overflow: 'hidden',
+                                textOverflow: 'ellipsis',
+                                whiteSpace: 'nowrap',
+                            },
+                        }}
+                    >
+                        <TextField source="user_id" />
+                        <TextField source="user.username" label="User Name" />
+                        <TextField source="content" />
+                        <DeleteButton resource='comment' redirect={false} />
                     </Datagrid>
                 </ReferenceManyField>
             </TabbedForm.Tab>

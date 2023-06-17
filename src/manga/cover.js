@@ -12,7 +12,7 @@ const Cover = () => {
                 component="img"
                 image={record.cover_art_url}
                 alt=""
-                sx={{ maxWidth: '42em', maxHeight: '15em' }}
+                sx={{ maxWidth: '20em', maxHeight: '25em' }}
             />
         </Card>
     );

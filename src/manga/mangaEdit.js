@@ -68,7 +68,7 @@ const ManageContent = () => {
                 component={Link}
                 to={`/manga/${record?.id}/chapter`}
             >
-                Create
+                Add chapter
             </Button>
             <ReferenceManyField
                 reference="manga"
@@ -92,6 +92,7 @@ const ManageContent = () => {
                     <TextField source="page" />
                     <EditButton
                         resource='chapter'
+                        redirect={false}
                     />
                     <DeleteButton resource='chapter' redirect={false} />
                 </Datagrid>

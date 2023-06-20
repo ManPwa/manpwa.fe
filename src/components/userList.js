@@ -1,12 +1,13 @@
 import React from 'react'
-import { List, Datagrid, TextField, DataField, EditButton, DeleteButton } from 'react-admin'
+import { List, Datagrid, TextField, BooleanField, EditButton, DeleteButton } from 'react-admin'
 
 const userList = (props) => {
     return <List {...props}>
         <Datagrid>
-            <TextField source='_id'></TextField>
             <TextField source='username'></TextField>
-            <DeleteButton basePath='/posts' />
+            <BooleanField source="is_admin" />
+            <TextField source='email'></TextField>
+            <DeleteButton resource='user' redirect={false} />
         </Datagrid>
     </List>
 }

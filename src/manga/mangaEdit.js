@@ -15,7 +15,9 @@ import {
     ArrayInput,
     SimpleFormIterator,
     Pagination,
-    CreateButton
+    CreateButton,
+    useCreatePath,
+    Button
 } from 'react-admin';
 import { Link } from 'react-router-dom';
 import { Stack } from '@mui/material';
@@ -26,99 +28,114 @@ const MangaTitle = () => {
     return record ? <span>{record.title}</span> : null;
 };
 
-const mangaEdit = () => (
-    <Edit title={<MangaTitle />}>
-        <TabbedForm>
-            <TabbedForm.Tab
-                label="Manga"
-                sx={{ maxWidth: '100%' }}
+const ManageContent = () => {
+    const record = useRecordContext();
+    return (<TabbedForm>
+        <TabbedForm.Tab
+            label="Manga"
+            sx={{ maxWidth: '100%' }}
+        >
+            <Stack direction="row" justifyContent="space-between">
+                <div>
+                    <Cover />
+                    <ImageInput sx={{ maxWidth: '16em' }} source="file" multiple={false}>
+                        <ImageField source="src" title="title" />
+                    </ImageInput>
+                </div>
+                <div style={{ paddingLeft: 20 }}>
+                    <TextInput multiline fullWidth source="title" />
+                    <TextInput multiline fullWidth source="year" />
+                    <TextInput multiline fullWidth source="status" />
+                    <TextInput multiline fullWidth source="demographic" />
+                    <TextInput multiline fullWidth source="author" />
+                    <ArrayInput multiline fullWidth source="tags">
+                        <SimpleFormIterator inline>
+                            <TextInput helperText={false} />
+                        </SimpleFormIterator>
+                    </ArrayInput>
+                    <TextInput multiline fullWidth source="original_language" />
+                    <TextInput multiline fullWidth source="description" />
+                </div>
+            </Stack>
+        </TabbedForm.Tab>
+        <TabbedForm.Tab
+            label="Chapter"
+            sx={{ maxWidth: '100%' }}
+        >
+            {/* <CreateButton resource={`chapter?mangaId=`}/> */}
+
+            <Button
+                component={Link}
+                to={`/manga/${record?.id}/chapter`}
             >
-                <Stack direction="row" justifyContent="space-between">
-                    <div>
-                        <Cover />
-                        <ImageInput sx={{ maxWidth: '16em' }} source="file" multiple={false}>
-                            <ImageField source="src" title="title" />
-                        </ImageInput>
-                    </div>
-                    <div style={{paddingLeft: 20}}>
-                        <TextInput multiline fullWidth source="title" />
-                        <TextInput multiline fullWidth source="year" />
-                        <TextInput multiline fullWidth source="status" />
-                        <TextInput multiline fullWidth source="demographic" />
-                        <TextInput multiline fullWidth source="author" />
-                        <ArrayInput multiline fullWidth source="tags">
-                            <SimpleFormIterator inline>
-                                <TextInput helperText={false} />
-                            </SimpleFormIterator>
-                        </ArrayInput>
-                        <TextInput multiline fullWidth source="original_language" />
-                        <TextInput multiline fullWidth source="description" />
-                    </div>
-                </Stack>
-            </TabbedForm.Tab>
-            <TabbedForm.Tab
-                label="Chapter"
-                sx={{ maxWidth: '100%' }}
+                Create
+            </Button>
+            <ReferenceManyField
+                reference="manga"
+                target="chapter"
+                pagination={<Pagination />}
             >
-                <CreateButton/>
-                <ReferenceManyField
-                    reference="manga"
-                    target="chapter"
-                    pagination={<Pagination />}
+                <Datagrid
+                    sx={{
+                        width: '100%',
+                        '& .column-comment': {
+                            maxWidth: '20em',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap',
+                        },
+                    }}
                 >
-                    <Datagrid
-                        sx={{
-                            width: '100%',
-                            '& .column-comment': {
-                                maxWidth: '20em',
-                                overflow: 'hidden',
-                                textOverflow: 'ellipsis',
-                                whiteSpace: 'nowrap',
-                            },
-                        }}
-                    >
-                        <TextField source="chapter" />
-                        <TextField source="title" />
-                        <TextField source="volumn" />
-                        <TextField source="page" />
-                        <EditButton
-                            resource='chapter'
-                        />
-                        <DeleteButton resource='chapter' redirect={false} />
-                    </Datagrid>
-                </ReferenceManyField>
-            </TabbedForm.Tab>
-            <TabbedForm.Tab
-                label="Comment"
-                sx={{ maxWidth: '100%' }}
+                    <TextField source="chapter" />
+                    <TextField source="title" />
+                    <TextField source="volumn" />
+                    <TextField source="page" />
+                    <EditButton
+                        resource='chapter'
+                    />
+                    <DeleteButton resource='chapter' redirect={false} />
+                </Datagrid>
+            </ReferenceManyField>
+        </TabbedForm.Tab>
+        <TabbedForm.Tab
+            label="Comment"
+            sx={{ maxWidth: '100%' }}
+        >
+            <ReferenceManyField
+                reference="manga"
+                target="comment"
+                pagination={<Pagination />}
             >
-                <ReferenceManyField
-                    reference="manga"
-                    target="comment"
-                    pagination={<Pagination />}
+                <Datagrid
+                    sx={{
+                        width: '100%',
+                        '& .column-comment': {
+                            maxWidth: '20em',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap',
+                        },
+                    }}
                 >
-                    <Datagrid
-                        sx={{
-                            width: '100%',
-                            '& .column-comment': {
-                                maxWidth: '20em',
-                                overflow: 'hidden',
-                                textOverflow: 'ellipsis',
-                                whiteSpace: 'nowrap',
-                            },
-                        }}
-                    >
-                        <TextField source="user_id" />
-                        <TextField source="user.username" label="User Name" />
-                        <TextField source="content" />
-                        <DeleteButton resource='comment' redirect={false} />
-                    </Datagrid>
-                </ReferenceManyField>
-            </TabbedForm.Tab>
-        </TabbedForm>
-    </Edit>
-);
+                    <TextField source="user_id" />
+                    <TextField source="user.username" label="User Name" />
+                    <TextField source="content" />
+                    <DeleteButton resource='comment' redirect={false} />
+                </Datagrid>
+            </ReferenceManyField>
+        </TabbedForm.Tab>
+    </TabbedForm>);
+}
+
+const MangaEdit = () => {
+
+    return (
+        <Edit title={<MangaTitle />}>
+            <ManageContent />
+        </Edit>
+    );
+};
 
 const req = [required()];
 
-export default mangaEdit;
+export default MangaEdit;

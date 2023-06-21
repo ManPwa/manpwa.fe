@@ -63,15 +63,19 @@ const dataProvider = {
     update: (resource, params) => {
         let hasUploadFile = false;
         const formData = new FormData();
+        let field = ["_deleted", "_updated", "_created", "_updater"]
         for (const property in params.data) {
+            if (params.data[property] === undefined || params.data[property] === null) continue;
+            if (params.data[property].length === 0) continue;
             if (property === 'file') {
                 hasUploadFile = true;
                 formData.append(property, new Blob([params.data[property].rawFile], { type: params.data[property].rawFile.type }));
                 continue;
             }
-            // formData.append(property, params.data[property]);
+            if (!field.includes(property)) {
+                formData.append(property, params.data[property]);
+            }
         }
-        console.log(formData);
 
 
         return fetchUtils.fetchJson(`${process.env.REACT_APP_API_BASE_URL}/api/${resource}/${params.id}`, {
@@ -95,18 +99,34 @@ const dataProvider = {
         }).then(({ json }) => ({ data: json }));
     },
 
-    create: (resource, params) =>
-        fetchUtils.fetchJson(`${process.env.REACT_APP_API_BASE_URL}/api/${resource}`, {
+    create: (resource, params) => {
+        let hasUploadFile = false;
+        const formData = new FormData();
+        let field = ["_deleted", "_updated", "_created", "_updater"]
+        for (const property in params.data) {
+            if (params.data[property] === undefined) continue;
+            if (params.data[property].length === 0) continue;
+            if (property === 'file') {
+                hasUploadFile = true;
+                formData.append(property, new Blob([params.data[property].rawFile], { type: params.data[property].rawFile.type }));
+                continue;
+            }
+            if (!field.includes(property)) {
+                formData.append(property, params.data[property]);
+            }
+        }
+
+        return fetchUtils.fetchJson(`${process.env.REACT_APP_API_BASE_URL}/api/${resource}`, {
             method: 'POST',
-            body: JSON.stringify(params.data),
+            body: hasUploadFile ? formData : params.data,
             headers: new Headers({
-                'Content-Type': 'application/json',
+                // 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
             }),
         }).then(({ json }) => ({
             data: { ...params.data, id: json._id },
-        })),
-
+        }));
+    },
     delete: (resource, params) =>
         fetchUtils.fetchJson(`${process.env.REACT_APP_API_BASE_URL}/api/${resource}/${params.id}`, {
             method: 'DELETE',

@@ -131,7 +131,8 @@ const ManageContent = () => {
 const MangaEdit = () => {
 
     return (
-        <Edit title={<MangaTitle />}>
+        <Edit title={<MangaTitle />}
+            redirect={false}>
             <ManageContent />
         </Edit>
     );

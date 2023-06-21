@@ -61,16 +61,29 @@ const dataProvider = {
     },
 
     update: (resource, params) => {
+        let hasUploadFile = false;
+        const formData = new FormData();
+        for (const property in params.data) {
+            if (property === 'file') {
+                hasUploadFile = true;
+                formData.append(property, new Blob([params.data[property].rawFile], { type: params.data[property].rawFile.type }));
+                continue;
+            }
+            // formData.append(property, params.data[property]);
+        }
+        console.log(formData);
+
+
         return fetchUtils.fetchJson(`${process.env.REACT_APP_API_BASE_URL}/api/${resource}/${params.id}`, {
             method: 'PUT',
-            body: JSON.stringify(params.data),
+            body: hasUploadFile ? formData : JSON.stringify(params.data),
             headers: new Headers({ 
-                'Content-Type': 'application/json',
+                // 'Content-Type': 'multipart/form-data',
                 'Authorization': `Bearer ${localStorage.getItem('token')}` 
             }),
         }).then(({ json }) => (
             { data: { ...json, id: json._id } }
-        ));
+        )).catch((e) => console.log(e));
     },
     updateMany: (resource, params) => {
         const query = {

@@ -1,10 +1,13 @@
 import * as React from 'react';
 import {
-    Create, SimpleForm, TextInput, ArrayInput, SimpleFormIterator
+    Create, SimpleForm, TextInput, ArrayInput, SimpleFormIterator, ImageInput, ImageField
 } from 'react-admin';
 const mangaCreate = () => (
     <Create>
         <SimpleForm>
+            <ImageInput sx={{ maxWidth: '16em' }} source="file" multiple={false}>
+                <ImageField source="src" title="title" />
+            </ImageInput>
             <TextInput multiline fullWidth source="title" />
             <TextInput multiline fullWidth source="year" />
             <TextInput multiline fullWidth source="status" />

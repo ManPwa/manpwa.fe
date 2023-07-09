@@ -10,7 +10,7 @@ const ChapterImage = () => {
         <Card sx={{ display: 'inline-block' }}>
             <CardMedia
                 component="img"
-                image={record.image_url}
+                image={`https://demo.nater.workers.dev/${record.image_url}`}
                 alt=""
                 sx={{ maxWidth: '20em', maxHeight: '25em' }}
             />

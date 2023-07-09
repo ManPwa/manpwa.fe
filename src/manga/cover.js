@@ -10,7 +10,7 @@ const Cover = () => {
         <Card sx={{ display: 'inline-block' }}>
             <CardMedia
                 component="img"
-                image={record.cover_art_url}
+                image={`https://demo.nater.workers.dev/${record.cover_art_url}`}
                 alt=""
                 sx={{ maxWidth: '20em', maxHeight: '25em' }}
             />

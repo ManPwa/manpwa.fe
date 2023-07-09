@@ -57,7 +57,7 @@ const LoadedGridList = () => {
                         type: 'edit',
                     })}
                 >
-                    <img src={record.cover_art_url} alt="" />
+                    <img src={`https://demo.nater.workers.dev/${record.cover_art_url}`} alt="" />
                     <ImageListItemBar
                         title={record.title}
                         sx={{

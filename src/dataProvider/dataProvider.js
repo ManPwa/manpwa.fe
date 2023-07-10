@@ -118,7 +118,7 @@ const dataProvider = {
 
         return fetchUtils.fetchJson(`${process.env.REACT_APP_API_BASE_URL}/api/${resource}`, {
             method: 'POST',
-            body: hasUploadFile ? formData : params.data,
+            body: hasUploadFile ? formData : JSON.stringify(params.data),
             headers: new Headers({
                 // 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
